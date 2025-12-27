@@ -8,22 +8,24 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
 
     <style>
         :root {
             --bg: #000000;
             --blue: #00C2FF;
-            --blue-alpha: rgba(0, 194, 255, 0.2);
+            --blue-hover: #73e5ff;
             --white: #FFFFFF;
-            --grey:#8787875b;
+            --grey: rgba(135, 135, 135, 0.2);
             --font-heading: 'Outfit', sans-serif;
             --font-body: 'Inter', sans-serif;
         }
 
         /* RESET E CURSOR */
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; }
-        
-        /* Classe para habilitar ponteiro lógico em elementos clicáveis */
         a, button, .hamburger, .nav-item, .btn-contact { cursor: pointer !important; }
 
         #custom-cursor {
@@ -44,15 +46,14 @@
             background: var(--bg); z-index: 10001; display: flex;
             justify-content: center; align-items: center;    
         }
-
         .loader-content{ display: flex; flex-direction:column; align-items: center;}
-        .loader-bar-bg { width: 250px; height: 2px; background: rgba(255,255,255,0.1); margin: 20px 0; border-radius: 5px; overflow: hidden; }
+        .loader-bar-bg { width: 250px; height: 2px; background: rgba(255, 255, 255, 0.1); margin: 20px 0; border-radius: 5px; overflow: hidden; }
         .loader-bar-fill { height: 100%; width: 0%; background: var(--blue); }
 
-        /* --- PLEXUS CANVAS (AGORA POR CIMA DA IMAGEM) --- */
+        /* --- PLEXUS CANVAS (SOBRE A IMAGEM) --- */
         #plexus-canvas {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            z-index: 20; /* Por cima do Hero Image Wrapper (z-index 5) */
+            z-index: 20; /* Elevado para passar por cima da foto (z:5) */
             pointer-events: none;
         }
 
@@ -71,23 +72,24 @@
         }
         #nav-underline { position: absolute; bottom: -5px; height: 2px; background: var(--blue); width: 0; opacity: 0; transition: 0.3s; }
 
-        /* ALINHAMENTO CORRIGIDO NAV RIGHT */
+        /* NAV RIGHT CORRIGIDA (ALINHAMENTO VERTICAL) */
         .nav-right { display: flex; align-items: center; gap: 25px; }
         .nav-right .magnetic-link { text-decoration: none; color: white; font-size: 13px; text-transform: uppercase; font-weight: 500; }
 
-        /* QUOTE STEVE JOBS - MELHOR PRÁTICA */
+        /* QUOTE STEVE JOBS - FORMATAÇÃO SEM <BR> */
         .steve-jobs-quote {
-            position: fixed; top: 50%; right: 50px; text-align: right;
-            font-size: 11px; opacity: 0.6; color: #fff; letter-spacing: 1.5px;
+            position: fixed; top: 40%; right: 50px; text-align: right;
+            font-size: 8px; opacity: 0.6; color: #fff; letter-spacing: 1.5px;
             z-index: 90; pointer-events: none; line-height: 1.8;
             white-space: pre-line; text-transform: uppercase;
         }
 
+        /* BOTÃO CONTATO SPOTLIGHT */
         .btn-contact {
             position: relative; padding: 12px 28px; border: 1.5px solid var(--blue);
             border-radius: 12px; color: var(--white); text-decoration: none;
             font-size: 12px; font-weight: 700; text-transform: uppercase;
-            overflow: hidden; background: transparent; display: inline-block;
+            overflow: hidden; background: transparent; display: flex; align-items: center;
         }
         .btn-spotlight {
             position: absolute; width: 80px; height: 80px; background: var(--blue);
@@ -95,7 +97,7 @@
             transform: translate(-50%, -50%); z-index: -1;
         }
         .btn-contact:hover { color: #000; transition: color 0.4s; }
-        .btn-contact:hover .btn-spotlight { opacity: 1; width: 250%; height: 250%; transition: width 0.5s, height 0.5s, opacity 0.3s; }
+        .btn-contact:hover .btn-spotlight { opacity: 1; width: 300%; height: 300%; transition: width 0.6s, height 0.6s, opacity 0.3s; }
 
         /* MODERN HAMBURGER */
         .hamburger { display: none; background: none; border: none; padding: 10px; width: 50px; }
@@ -103,83 +105,92 @@
         .ham-line-1 { width: 35px; }
         .ham-line-2 { width: 20px; }
         .ham-line-3 { width: 30px; }
-        .ham-active .ham-line-1 { transform: rotate(45deg) translate(5px, 6px); width: 35px; }
+        
+        .ham-active .ham-line-1 { transform: rotate(45deg) translate(5px, 6px); }
         .ham-active .ham-line-2 { opacity: 0; width: 0; }
         .ham-active .ham-line-3 { transform: rotate(-45deg) translate(5px, -6px); width: 35px; }
 
         /* MENU MOBILE - EFEITO MARCA D'ÁGUA */
         .mobile-overlay {
             position: fixed; top: 0; right: -100%; width: 100%; height: 100%;
-            background: #000; z-index: 99; display: flex; flex-direction: column;
+            background: #000; z-index: 999; display: flex; flex-direction: column;
             justify-content: center; align-items: center; gap: 40px;
         }
         .mobile-overlay a { 
-            font-family: var(--font-heading); font-size: 20px; color: white; 
+            font-family: var(--font-heading); font-size: 24px; color: white; 
             text-decoration: none; font-weight: 900; position: relative; transition: color 0.3s;
         }
-        /* O EFEITO MARCA D'ÁGUA */
         .mobile-overlay a::before {
             content: attr(data-text); position: absolute; left: 50%; top: 50%;
-            transform: translate(-50%, -50%) scale(1.5); color: var(--grey);
-            opacity: 0; font-size: 40px; z-index: -1; transition: 0.5s; pointer-events: none;
+            transform: translate(-50%, -50%) scale(1.5); color: var(--blue);
+            opacity: 0; font-size: 60px; z-index: -1; transition: 0.5s; pointer-events: none;
+            white-space: nowrap;
         }
-        .mobile-overlay a:hover::before { opacity: 0.5; transform: translate(-50%, -50%) scale(1.8); }
+        .mobile-overlay a:hover::before { opacity: 0.2; transform: translate(-50%, -50%) scale(2); }
         .mobile-overlay a:hover { color: var(--blue);}
 
-        /* HERO */
+        /* HERO SECTION */
         .hero { position: relative; height: 100vh; display: flex; align-items: center; padding-left: 10%; width: 100%; z-index: 10; }
-        .hero-content{line-height: 500%;}
-        .firstname { color: var(--blue); line-height: .05rem;}
+        .hero-content { line-height: 0.8; z-index: 30; position: relative; }
+        .firstname { color: var(--blue);}
+
         .hero-image-wrapper { position: absolute; top: 0; right: 0; width: 45%; height: 100%; z-index: 5; }
-        .hero-image-wrapper img { height: 100%; width: 100%; object-fit: cover; }
+        .hero-image-wrapper img { height: 100%; width: 100%; object-fit: cover; opacity: 1; transition: 0.5s; }
 
         /* SOCIAL BAR - POSIÇÃO DIREITA */
         .social-sidebar {
-            position: fixed; right: 40px; top: 90%; transform: translateY(-50%);
-            display: flex; flex-direction: column; gap: 30px; z-index: 100;
+            position: fixed; right: 40px; top: 85%; transform: translateY(-50%);
+            display: flex; flex-direction: column; gap: 25px; z-index: 100;
         }
         .social-sidebar a { color: rgba(255,255,255,0.3); font-size: 20px; transition: 0.3s; }
-        .social-sidebar a:hover { color: var(--blue); }
+        .social-sidebar a:hover { color: var(--blue); transform: scale(1.2); }
 
         /* SCROLL DOWN COM SETA ANIMADA */
         .scroll-down {
             position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%);
             text-align: center; font-size: 9px; letter-spacing: 4px; z-index: 30;
+            display: flex; flex-direction: column; align-items: center;
         }
         .scroll-down i { 
-            display: block; font-size: 16px; margin-bottom: 10px; color: var(--blue);
+            display: block; font-size: 16px; margin-top: 10px; color: var(--blue);
             animation: infinite-drop 2s infinite ease-in-out;
         }
         @keyframes infinite-drop {
-            0% { transform: translateY(-10px); opacity: 0; }
-            50% { transform: translateY(0px); opacity: 1; }
+            0% { transform: translateY(-5px); opacity: 0; }
+            50% { transform: translateY(5px); opacity: 1; }
             100% { transform: translateY(15px); opacity: 0; }
         }
 
-        /* RESPONSIVIDADE */
+        /* RESPONSIVIDADE (TABLET / MOBILE) */
         @media (max-width: 1100px) {
             .nav-center, .nav-right, .steve-jobs-quote { display: none; }
-            .hamburger { display: block; }
+            .hamburger { display: block; z-index: 1000; }
             .hero { padding-left: 0; justify-content: center; text-align: center; }
-            .hero-content{line-height: 100px;}
-            .hero-image-wrapper { width: 100%; /*opacity: 0.3;*/ }
-            .social-sidebar { position: absolute; flex-direction: row; bottom: 20px; left: 50%; transform: translateX(-50%); top: auto; }
-            .scroll-down { bottom: 80px; }
+            .hero-content { line-height: 1.1; z-index: 100; position: relative; width: 100%; }
+            /* FIX: Garantindo que o H1 apareça no mobile */
+            .hero h1 { font-size: clamp(2.5rem, 12vw, 4rem) !important; display: block !important; opacity: 1 !important; visibility: visible !important;}
+            
+            .hero-image-wrapper { width: 100%; opacity: 0.3; z-index: 5; }
+            .social-sidebar { position: fixed; flex-direction: row; bottom: 30px; left: 50%; transform: translateX(-50%); top: auto; right: auto; gap: 40px;}
+            .scroll-down { bottom: 90px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- PRELOADER -->
     <div id="preloader">
         <div class="loader-content">
-            <img src="Logo-RivaUX-Branco-Azul.png" class="logo" alt="" style="display: flex; justify-content: center;">
+            <img src="Logo-RivaUX-Branco-Azul.png" alt="RivaUX" style="height: 50px; margin-bottom: 20px;">
             <div class="loader-bar-bg"><div class="loader-bar-fill"></div></div>
             <div style="font-size: 10px; letter-spacing: 4px; opacity: 0.6;">BEM-VINDO</div>
         </div>
     </div>
 
     <div id="custom-cursor"></div>
-    <div class="steve-jobs-quote">"Design não é apenas aparência.
+    
+    <div class="steve-jobs-quote">
+        "Design não é apenas aparência.
         Design é como funciona." 
         <strong>- STEVE JOBS</strong>
     </div>
@@ -212,6 +223,7 @@
         </button>
     </nav>
 
+    <!-- MENU MOBILE COM EFEITO DATA-TEXT PARA MARCA D'ÁGUA -->
     <div class="mobile-overlay" id="mobile-overlay">
         <a href="#home" data-text="HOME">HOME</a>
         <a href="#sobre" data-text="SOBRE">SOBRE</a>
@@ -221,22 +233,24 @@
 
     <section class="hero">
         <div class="hero-content">
-            <h1 style="font-family: 'Outfit'; font-size: clamp(3rem, 10vw, 6rem);"><span class="firstname">RIVELINO</span><br>RODRIGUES</h1>
-            <div style="margin-top:10px; font-size: 2rem; font-weight: 300;">EU SOU <span id="type-target"></span><span style="color:var(--blue)">|</span></div>
+            <h1 style="font-family: 'Outfit'; font-weight: 800 ;font-size: clamp(2rem, 10vw, 4rem);">
+                <span class="firstname">RIVELINO</span><br>RODRIGUES
+            </h1>
+            <div style="margin-top:20px; font-size: 2rem; font-weight: 300;">EU SOU <span id="type-target" style="font-weight: 800; color: var(--blue);"></span><span style="color:var(--blue)">|</span></div>
         </div>
+        
         <div class="hero-image-wrapper"><img src="hero-section-img.png" alt="Hero Image"></div>
+        
         <div class="scroll-down">
             SCROLL DOWN
             <i class="fas fa-chevron-down"></i>
-            
-            
         </div>
     </section>
 
     <div class="social-sidebar">
-        <a href="www.linkedin.com/in/rivelinorodrigues" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-        <a href="https://www.behance.net/rivelinorodrigues"><i class="fab fa-behance"></i></a>
-        <a href="https://github.com/RivaRodrigues"><i class="fab fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/rivelinorodrigues" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+        <a href="https://www.behance.net/rivelinorodrigues" target="_blank"><i class="fab fa-behance"></i></a>
+        <a href="https://github.com/RivaRodrigues" target="_blank"><i class="fab fa-github"></i></a>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -257,11 +271,10 @@
             gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
         });
 
-        // Efeito cursor em links
-        const clickable = document.querySelectorAll('a, button, .hamburger');
-        clickable.forEach(el => {
-            el.addEventListener('mouseenter', () => gsap.to(cursor, { scale: 1.6, borderColor: '#00C2FF', backgroundColor: 'rgba(0,194,255,0.1)' }));
-            el.addEventListener('mouseleave', () => gsap.to(cursor, { scale: 1, borderColor: '#FFF', backgroundColor: 'transparent' }));
+        // Hover em elementos clicáveis
+        document.querySelectorAll('a, button, .hamburger').forEach(el => {
+            el.addEventListener('mouseenter', () => gsap.to(cursor, { scale: 1.6, borderColor: '#00C2FF' }));
+            el.addEventListener('mouseleave', () => gsap.to(cursor, { scale: 1, borderColor: '#FFF' }));
         });
 
         // --- HAMBURGER ---
@@ -282,13 +295,14 @@
 
         // --- UNDERLINE MAGNÉTICO ---
         const underline = document.getElementById('nav-underline');
-        document.querySelectorAll('.magnetic-link').forEach(link => {
+        document.querySelectorAll('.nav-center .magnetic-link').forEach(link => {
             link.addEventListener('mouseenter', () => {
                 const rect = link.getBoundingClientRect();
                 const parent = link.parentElement.getBoundingClientRect();
                 gsap.to(underline, { left: rect.left - parent.left, width: rect.width, opacity: 1 });
             });
         });
+        document.querySelector('.nav-center').addEventListener('mouseleave', () => gsap.to(underline, { opacity: 0 }));
 
         // --- TYPEWRITER ---
         const words = ["UX UI DESIGNER", "WEB DESIGNER", "FREELANCER"];
@@ -297,23 +311,29 @@
             masterTl.add(gsap.timeline({repeatDelay: 2}).to("#type-target", { text: word, duration: 1 }).to("#type-target", { text: "", duration: 0.8, delay: 1 }));
         });
 
-        // --- PLEXUS ACELERADO ---
+        // --- PLEXUS VELOZ ---
         function initPlexus() {
             const canvas = document.getElementById('plexus-canvas');
             const ctx = canvas.getContext('2d');
             let particles = [];
-            let mouse = { x: -1000, y: -1000, radius: 200 };
+            let mouse = { x: -1000, y: -1000, radius: 220 };
 
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
 
-            for (let i = 0; i < (canvas.width * canvas.height / 30000); i++) {
+            // Poucas partículas (Clean Lumio style) mas conectadas
+            let count = (canvas.width * canvas.height / 35000);
+            for (let i = 0; i < count; i++) {
                 particles.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    vx: (Math.random() - 0.5) * 1.5, // Velocidade aumentada
-                    vy: (Math.random() - 0.5) * 1.5, // Velocidade aumentada
-                    size: 3
+                    vx: (Math.random() - 0.5) * 1.8, // Velocidade aumentada
+                    vy: (Math.random() - 0.5) * 1.8,
+                    size: 2.8
                 });
             }
 
@@ -324,11 +344,12 @@
                     if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
                     if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
 
-                    // Repulsão
-                    let dx = p.x - mouse.x; let dy = p.y - mouse.y;
+                    // REPULSÃO (ABRIR CAMINHO)
+                    let dx = p.x - mouse.x;
+                    let dy = p.y - mouse.y;
                     let dist = Math.sqrt(dx*dx + dy*dy);
                     if(dist < mouse.radius){
-                        p.x += (dx/dist) * 8; p.y += (dy/dist) * 8;
+                        p.x += (dx/dist) * 10; p.y += (dy/dist) * 10;
                     }
 
                     ctx.fillStyle = "rgba(255,255,255,0.4)";
@@ -338,7 +359,7 @@
                         let p2 = particles[j];
                         let d = Math.sqrt((p.x-p2.x)**2 + (p.y-p2.y)**2);
                         if(d < 180){
-                            ctx.strokeStyle = `rgba(0,194,255,${(1 - d/180) * 0.3})`;
+                            ctx.strokeStyle = `rgba(0,194,255,${(1 - d/180) * 0.35})`;
                             ctx.lineWidth = 1;
                             ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
                         }
