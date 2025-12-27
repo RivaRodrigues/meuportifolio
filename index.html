@@ -6,13 +6,9 @@
     <title>Rivelino Rodrigues | Designer Pro</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-    <link rel="manifest" href="site.webmanifest">
-
+    
     <style>
         :root {
             --bg: #000000;
@@ -40,7 +36,7 @@
             width: 100vw;
         }
 
-        /* --- PRELOADER --- */
+        /* --- PRELOADER MANTIDO --- */
         #preloader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg); z-index: 10001; display: flex;
@@ -50,33 +46,45 @@
         .loader-bar-bg { width: 250px; height: 2px; background: rgba(255, 255, 255, 0.1); margin: 20px 0; border-radius: 5px; overflow: hidden; }
         .loader-bar-fill { height: 100%; width: 0%; background: var(--blue); }
 
-        /* --- PLEXUS CANVAS (SOBRE A IMAGEM) --- */
+        /* --- PLEXUS SOBRE A IMAGEM --- */
         #plexus-canvas {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            z-index: 20; /* Elevado para passar por cima da foto (z:5) */
-            pointer-events: none;
+            z-index: 20; pointer-events: none;
         }
 
         /* --- NAVBAR --- */
         nav {
             position: fixed; top: 0; width: 100%; height: 110px; padding: 0 50px;
-            display: flex; align-items: center; justify-content: space-between; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between; 
+            z-index: 4000;
         }
-        .logo { height: 45px; z-index: 101; }
-        .logo img { height: 100%; }
+        
+        .logo { 
+            height: 30px; z-index: 101; flex-shrink: 0; display: flex; align-items: center;
+            transition: opacity 0.3s ease, visibility 0.3s ease; /* Transição para sumir no menu */
+        }
+        .logo img { height: 100%; width: auto; object-fit: contain; }
+        .logo-mobile { display: none; }
 
-        .nav-center { display: flex; align-items: center; gap: 30px; position: relative; }
+        /* Estilo para ocultar o logo via JS */
+        .logo.hide-logo { opacity: 0; visibility: hidden; }
+
+        .nav-center { display: flex; align-items: center; gap: 30px; position: relative; margin-left: 20px; }
         .nav-center .magnetic-link {
             text-decoration: none; color: var(--white); font-size: 13px; font-weight: 500;
             text-transform: uppercase; letter-spacing: 1px;
         }
         #nav-underline { position: absolute; bottom: -5px; height: 2px; background: var(--blue); width: 0; opacity: 0; transition: 0.3s; }
 
-        /* NAV RIGHT CORRIGIDA (ALINHAMENTO VERTICAL) */
-        .nav-right { display: flex; align-items: center; gap: 25px; }
+        .nav-social-inner {
+            display: flex; align-items: center; gap: 18px; margin: 0 30px; border-left: 1px solid rgba(255,255,255,0.1); padding-left: 30px;
+        }
+        .nav-social-inner a { color: rgba(255,255,255,0.4); font-size: 16px; transition: 0.3s; text-decoration: none; }
+        .nav-social-inner a:hover { color: var(--blue); transform: scale(1.1); }
+
+        .nav-right { display: flex; align-items: center; gap: 25px; flex-shrink: 0; }
         .nav-right .magnetic-link { text-decoration: none; color: white; font-size: 13px; text-transform: uppercase; font-weight: 500; }
 
-        /* QUOTE STEVE JOBS - FORMATAÇÃO SEM <BR> */
         .steve-jobs-quote {
             position: fixed; top: 40%; right: 50px; text-align: right;
             font-size: 8px; opacity: 0.6; color: #fff; letter-spacing: 1.5px;
@@ -84,9 +92,9 @@
             white-space: pre-line; text-transform: uppercase;
         }
 
-        /* BOTÃO CONTATO SPOTLIGHT */
+        /* BOTAO CONTATO */
         .btn-contact {
-            position: relative; padding: 12px 28px; border: 1.5px solid var(--blue);
+            position: relative; padding: 12px 56px; border: 1.5px solid var(--blue);
             border-radius: 12px; color: var(--white); text-decoration: none;
             font-size: 12px; font-weight: 700; text-transform: uppercase;
             overflow: hidden; background: transparent; display: flex; align-items: center;
@@ -96,63 +104,56 @@
             border-radius: 50%; opacity: 0; filter: blur(25px); pointer-events: none;
             transform: translate(-50%, -50%); z-index: -1;
         }
-        .btn-contact:hover { color: #000; transition: color 0.4s; }
+        .btn-contact:hover { color: #000; }
         .btn-contact:hover .btn-spotlight { opacity: 1; width: 300%; height: 300%; transition: width 0.6s, height 0.6s, opacity 0.3s; }
 
-        /* MODERN HAMBURGER */
-        .hamburger { display: none; background: none; border: none; padding: 10px; width: 50px; }
-        .ham-line { display: block; height: 2px; background: white; margin-bottom: 6px; transition: 0.4s; }
+        /* HAMBURGER REFINADO */
+        .hamburger { display: none; background: none; border: none; padding: 10px; width: 50px; z-index: 5000; position: relative; height: 45px;}
+        .ham-line { display: block; height: 2px; background: white; margin-bottom: 7px; transition: all 0.4s cubic-bezier(0.7, 0, 0.3, 1); transform-origin: center;}
         .ham-line-1 { width: 35px; }
-        .ham-line-2 { width: 20px; }
-        .ham-line-3 { width: 30px; }
+        .ham-line-2 { width: 22px; margin-left: auto; }
+        .ham-line-3 { width: 28px; margin-bottom: 0; margin-left: auto;}
         
-        .ham-active .ham-line-1 { transform: rotate(45deg) translate(5px, 6px); }
-        .ham-active .ham-line-2 { opacity: 0; width: 0; }
-        .ham-active .ham-line-3 { transform: rotate(-45deg) translate(5px, -6px); width: 35px; }
+        .ham-active .ham-line-1 { transform: translateY(9px) rotate(45deg); width: 35px; }
+        .ham-active .ham-line-2 { opacity: 0; transform: translateX(20px); }
+        .ham-active .ham-line-3 { transform: translateY(-9px) rotate(-45deg); width: 35px; margin-left: 0; }
 
-        /* MENU MOBILE - EFEITO MARCA D'ÁGUA */
+        /* OVERLAY AZUL */
         .mobile-overlay {
             position: fixed; top: 0; right: -100%; width: 100%; height: 100%;
-            background: #000; z-index: 999; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; gap: 40px;
+            background: #0370ff; z-index: 3000; 
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center; gap: 20px;
         }
         .mobile-overlay a { 
             font-family: var(--font-heading); font-size: 24px; color: white; 
             text-decoration: none; font-weight: 900; position: relative; transition: color 0.3s;
+            text-transform: uppercase;
         }
         .mobile-overlay a::before {
             content: attr(data-text); position: absolute; left: 50%; top: 50%;
-            transform: translate(-50%, -50%) scale(1.5); color: var(--blue);
+            transform: translate(-50%, -50%) scale(1.5); color: rgba(255,255,255,0.1);
             opacity: 0; font-size: 60px; z-index: -1; transition: 0.5s; pointer-events: none;
             white-space: nowrap;
         }
-        .mobile-overlay a:hover::before { opacity: 0.2; transform: translate(-50%, -50%) scale(2); }
-        .mobile-overlay a:hover { color: var(--blue);}
+        .mobile-overlay a:hover::before { opacity: 1; transform: translate(-50%, -50%) scale(1.8); }
 
-        /* HERO SECTION */
+        /* HERO - CONFIGURAÇÕES ORIGINAIS */
         .hero { position: relative; height: 100vh; display: flex; align-items: center; padding-left: 10%; width: 100%; z-index: 10; }
         .hero-content { line-height: 0.8; z-index: 30; position: relative; }
         .firstname { color: var(--blue);}
-
         .hero-image-wrapper { position: absolute; top: 0; right: 0; width: 45%; height: 100%; z-index: 5; }
         .hero-image-wrapper img { height: 100%; width: 100%; object-fit: cover; opacity: 1; transition: 0.5s; }
 
-        /* SOCIAL BAR - POSIÇÃO DIREITA */
-        .social-sidebar {
-            position: fixed; right: 40px; top: 85%; transform: translateY(-50%);
-            display: flex; flex-direction: column; gap: 25px; z-index: 100;
-        }
-        .social-sidebar a { color: rgba(255,255,255,0.3); font-size: 20px; transition: 0.3s; }
-        .social-sidebar a:hover { color: var(--blue); transform: scale(1.2); }
+        .social-sidebar { display: none; z-index: 100; }
 
-        /* SCROLL DOWN COM SETA ANIMADA */
         .scroll-down {
-            position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%);
+            position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%);
             text-align: center; font-size: 9px; letter-spacing: 4px; z-index: 30;
-            display: flex; flex-direction: column; align-items: center;
+            display: flex; flex-direction: column; align-items: center; opacity: 0.6;
         }
         .scroll-down i { 
-            display: block; font-size: 16px; margin-top: 10px; color: var(--blue);
+            display: block; font-size: 16px; margin-top: 15px; color: var(--blue);
             animation: infinite-drop 2s infinite ease-in-out;
         }
         @keyframes infinite-drop {
@@ -161,24 +162,24 @@
             100% { transform: translateY(15px); opacity: 0; }
         }
 
-        /* RESPONSIVIDADE (TABLET / MOBILE) */
         @media (max-width: 1100px) {
-            .nav-center, .nav-right, .steve-jobs-quote { display: none; }
-            .hamburger { display: block; z-index: 1000; }
+            nav { padding: 0 25px; height: 80px; }
+            .logo-desktop { display: none; }
+            .logo-mobile { display: block !important; width: 5rem; height: 1.875rem; }
+            .nav-center, .nav-social-inner, .nav-right, .steve-jobs-quote { display: none; }
+            .hamburger { display: block; }
             .hero { padding-left: 0; justify-content: center; text-align: center; }
             .hero-content { line-height: 1.1; z-index: 100; position: relative; width: 100%; }
-            /* FIX: Garantindo que o H1 apareça no mobile */
-            .hero h1 { font-size: clamp(2.5rem, 12vw, 4rem) !important; display: block !important; opacity: 1 !important; visibility: visible !important;}
-            
+            .hero h1 { font-size: clamp(2.5rem, 10vw, 4rem) !important; }
+            .hero-content div { font-size: 1.2rem !important; margin-top: 15px !important; }
             .hero-image-wrapper { width: 100%; opacity: 0.3; z-index: 5; }
-            .social-sidebar { position: fixed; flex-direction: row; bottom: 30px; left: 50%; transform: translateX(-50%); top: auto; right: auto; gap: 40px;}
-            .scroll-down { bottom: 90px; }
+            .social-sidebar { position: fixed; flex-direction: row; display: flex; bottom: 30px; left: 50%; top: auto; right: auto; transform: translateX(-50%); gap: 40px; }
+            .scroll-down { bottom: 110px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- PRELOADER -->
     <div id="preloader">
         <div class="loader-content">
             <img src="Logo-RivaUX-Branco-Azul.png" alt="RivaUX" style="height: 50px; margin-bottom: 20px;">
@@ -188,9 +189,7 @@
     </div>
 
     <div id="custom-cursor"></div>
-    
-    <div class="steve-jobs-quote">
-        "Design não é apenas aparência.
+    <div class="steve-jobs-quote">"Design não é apenas aparência.
         Design é como funciona." 
         <strong>- STEVE JOBS</strong>
     </div>
@@ -198,7 +197,11 @@
     <canvas id="plexus-canvas"></canvas>
 
     <nav>
-        <div class="logo"><img src="Logo-RivaUX-Branco-Azul.png" alt="RivaUX"></div>
+        <div class="logo">
+            <img src="Logo-RivaUX-Branco-Azul.png" class="logo-desktop" alt="RivaUX Logo">
+            <img src="Logo-RivaUX-Branco-Azul.png" class="logo-mobile" alt="Logo R">
+        </div>
+        
         <div class="nav-center">
             <a href="#home" class="magnetic-link">Home</a>
             <a href="#sobre" class="magnetic-link">Sobre</a>
@@ -209,6 +212,13 @@
             <a href="#blog" class="magnetic-link">Blog</a>
             <div id="nav-underline"></div>
         </div>
+
+        <div class="nav-social-inner">
+            <a href="https://www.linkedin.com/in/rivelinorodrigues" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://www.behance.net/rivelinorodrigues" target="_blank"><i class="fab fa-behance"></i></a>
+            <a href="https://github.com/RivaRodrigues" target="_blank"><i class="fab fa-github"></i></a>
+        </div>
+
         <div class="nav-right">
             <a href="#aulas" class="magnetic-link">Aulas</a>
             <a href="#contato" class="btn-contact">
@@ -223,24 +233,25 @@
         </button>
     </nav>
 
-    <!-- MENU MOBILE COM EFEITO DATA-TEXT PARA MARCA D'ÁGUA -->
     <div class="mobile-overlay" id="mobile-overlay">
-        <a href="#home" data-text="HOME">HOME</a>
-        <a href="#sobre" data-text="SOBRE">SOBRE</a>
-        <a href="#projetos" data-text="PROJETOS">PROJETOS</a>
-        <a href="#contato" data-text="CONTATO">CONTATO</a>
+        <a href="#home" data-text="HOME">Home</a>
+        <a href="#sobre" data-text="SOBRE">Sobre</a>
+        <a href="#skills" data-text="SKILLS">Skills</a>
+        <a href="#projetos" data-text="PROJETOS">Projetos</a>
+        <a href="#servicos" data-text="SERVIÇOS">Serviços</a>
+        <a href="#blog" data-text="BLOG">Blog</a>
+        <a href="#aulas" data-text="AULAS">Aulas</a>
+        <a href="#contato" data-text="CONTATO">Contato</a>
     </div>
 
     <section class="hero">
         <div class="hero-content">
-            <h1 style="font-family: 'Outfit'; font-weight: 800 ;font-size: clamp(2rem, 10vw, 4rem);">
+            <h1 style="font-family: 'Outfit'; font-weight: 800; font-size: clamp(2rem, 10vw, 4rem);">
                 <span class="firstname">RIVELINO</span><br>RODRIGUES
             </h1>
             <div style="margin-top:20px; font-size: 2rem; font-weight: 300;">EU SOU <span id="type-target" style="font-weight: 800; color: var(--blue);"></span><span style="color:var(--blue)">|</span></div>
         </div>
-        
         <div class="hero-image-wrapper"><img src="hero-section-img.png" alt="Hero Image"></div>
-        
         <div class="scroll-down">
             SCROLL DOWN
             <i class="fas fa-chevron-down"></i>
@@ -259,33 +270,43 @@
     <script>
         gsap.registerPlugin(TextPlugin);
 
-        // --- PRELOADER ---
         gsap.to(".loader-bar-fill", { width: "100%", duration: 1.5, onComplete: () => {
             gsap.to("#preloader", { y: "-100%", duration: 1, ease: "power4.inOut" });
             initPlexus();
         }});
 
-        // --- CURSOR ---
         const cursor = document.getElementById('custom-cursor');
         document.addEventListener('mousemove', (e) => {
             gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
         });
 
-        // Hover em elementos clicáveis
-        document.querySelectorAll('a, button, .hamburger').forEach(el => {
-            el.addEventListener('mouseenter', () => gsap.to(cursor, { scale: 1.6, borderColor: '#00C2FF' }));
-            el.addEventListener('mouseleave', () => gsap.to(cursor, { scale: 1, borderColor: '#FFF' }));
-        });
-
-        // --- HAMBURGER ---
+        // Controle Hamburger e Overlay
         const ham = document.getElementById('hamburger');
         const overlay = document.getElementById('mobile-overlay');
+        const logoCont = document.querySelector('.logo'); // Seleciona o container do logo
+
         ham.addEventListener('click', () => {
+            const isOpening = !ham.classList.contains('ham-active');
             ham.classList.toggle('ham-active');
-            gsap.to(overlay, { right: ham.classList.contains('ham-active') ? 0 : "-100%", duration: 0.7, ease: "power3.inOut" });
+            gsap.to(overlay, { right: isOpening ? 0 : "-100%", duration: 0.7, ease: "power3.inOut" });
+
+            // LOGICA SOLICITADA: Esconder o logo quando menu abrir
+            if(isOpening) {
+                logoCont.classList.add('hide-logo');
+            } else {
+                logoCont.classList.remove('hide-logo');
+            }
         });
 
-        // --- CONTATO SPOTLIGHT ---
+        // Garantir que ao clicar em um link o logo volte
+        document.querySelectorAll('.mobile-overlay a').forEach(link => {
+            link.addEventListener('click', () => {
+                ham.classList.remove('ham-active');
+                gsap.to(overlay, { right: "-100%", duration: 0.7 });
+                logoCont.classList.remove('hide-logo');
+            });
+        });
+
         const btnContact = document.querySelector('.btn-contact');
         const spotlight = document.querySelector('.btn-spotlight');
         btnContact.addEventListener('mousemove', (e) => {
@@ -293,7 +314,6 @@
             gsap.to(spotlight, { left: e.clientX - rect.left, top: e.clientY - rect.top, duration: 0.3 });
         });
 
-        // --- UNDERLINE MAGNÉTICO ---
         const underline = document.getElementById('nav-underline');
         document.querySelectorAll('.nav-center .magnetic-link').forEach(link => {
             link.addEventListener('mouseenter', () => {
@@ -304,64 +324,43 @@
         });
         document.querySelector('.nav-center').addEventListener('mouseleave', () => gsap.to(underline, { opacity: 0 }));
 
-        // --- TYPEWRITER ---
         const words = ["UX UI DESIGNER", "WEB DESIGNER", "FREELANCER"];
         let masterTl = gsap.timeline({repeat: -1});
         words.forEach(word => {
-            masterTl.add(gsap.timeline({repeatDelay: 2}).to("#type-target", { text: word, duration: 1 }).to("#type-target", { text: "", duration: 0.8, delay: 1 }));
+            masterTl.add(gsap.timeline({repeatDelay: 2}).to("#type-target", { text: word, duration: 1.2 }).to("#type-target", { text: "", duration: 0.8, delay: 1 }));
         });
 
-        // --- PLEXUS VELOZ ---
         function initPlexus() {
             const canvas = document.getElementById('plexus-canvas');
             const ctx = canvas.getContext('2d');
             let particles = [];
             let mouse = { x: -1000, y: -1000, radius: 220 };
-
-            function resize() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-            window.addEventListener('resize', resize);
-            resize();
-
-            // Poucas partículas (Clean Lumio style) mas conectadas
+            window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
             let count = (canvas.width * canvas.height / 35000);
             for (let i = 0; i < count; i++) {
                 particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    vx: (Math.random() - 0.5) * 1.8, // Velocidade aumentada
-                    vy: (Math.random() - 0.5) * 1.8,
-                    size: 2.8
+                    x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 1.5, vy: (Math.random() - 0.5) * 1.5, size: 2.8
                 });
             }
-
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 particles.forEach((p, i) => {
                     p.x += p.vx; p.y += p.vy;
                     if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
                     if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
-                    // REPULSÃO (ABRIR CAMINHO)
-                    let dx = p.x - mouse.x;
-                    let dy = p.y - mouse.y;
+                    let dx = p.x - mouse.x; let dy = p.y - mouse.y;
                     let dist = Math.sqrt(dx*dx + dy*dy);
-                    if(dist < mouse.radius){
-                        p.x += (dx/dist) * 10; p.y += (dy/dist) * 10;
-                    }
-
+                    if(dist < mouse.radius){ p.x += (dx/dist) * 10; p.y += (dy/dist) * 10; }
                     ctx.fillStyle = "rgba(255,255,255,0.4)";
-                    ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
-
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
                     for(let j=i+1; j<particles.length; j++){
                         let p2 = particles[j];
                         let d = Math.sqrt((p.x-p2.x)**2 + (p.y-p2.y)**2);
                         if(d < 180){
                             ctx.strokeStyle = `rgba(0,194,255,${(1 - d/180) * 0.35})`;
-                            ctx.lineWidth = 1;
-                            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+                            ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
                         }
                     }
                 });
